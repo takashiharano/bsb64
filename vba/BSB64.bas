@@ -1,5 +1,5 @@
 Attribute VB_Name = "BSB64"
-' Plain Text to BSB64 encoded String
+' Plain text to BSB64 encoded string
 Public Function encodeBSB64Str(str As String, n As Integer) As String
     Dim arr() As Byte
     Dim ret As String
@@ -8,13 +8,31 @@ Public Function encodeBSB64Str(str As String, n As Integer) As String
     encodeBSB64Str = ret
 End Function
 
-' BSB64 encoded String to Plain Text
+' BSB64 encoded string to Plain text
 Public Function decodeBSB64Str(str As String, n As Integer) As String
     Dim arr() As Byte
     Dim ret As String
     arr = decodeBSB64(str, n)
     ret = utf8BytesToStr(arr)
     decodeBSB64Str = ret
+End Function
+
+' Plain text to Base64 encoded string
+Public Function encodeBase64Str(str As String) As String
+    Dim arr() As Byte
+    Dim ret As String
+    arr = strToUtf8Bytes(str)
+    ret = encodeBase64(arr)
+    encodeBase64Str = ret
+End Function
+
+' Base64 encoded string to Plain text
+Public Function decodeBase64Str(str As String) As String
+    Dim arr() As Byte
+    Dim ret As String
+    arr = decodeBase64(str)
+    ret = utf8BytesToStr(arr)
+    decodeBase64Str = ret
 End Function
 
 Public Function encodeBSB64(arr() As Byte, n As Integer) As String
@@ -51,65 +69,7 @@ Public Function decodeBSB64(BSB64 As String, n As Integer) As Byte()
     decodeBSB64 = arr
 End Function
 
-Private Function bitInvert(v As Byte) As Byte
-    bitInvert = (v Xor 255)
-End Function
-
-Private Function bitRotateLeft(v As Byte, n As Integer) As Byte
-    n = n Mod 8
-    Dim ret As Byte
-    ret = bitShiftLeft(v, n) Or bitShiftRight(v, (8 - n))
-    bitRotateLeft = ret
-End Function
-
-Private Function bitRotateRight(v As Byte, n As Integer) As Byte
-    n = n Mod 8
-    Dim ret As Byte
-    ret = bitShiftRight(v, n) Or bitShiftLeft(v, (8 - n))
-    bitRotateRight = ret
-End Function
-
-Private Function bitShiftLeft(v As Byte, n As Integer) As Byte
-    Dim ret As Byte
-    If n = 0 Then
-        ret = v
-    Else
-        Dim k As Byte
-        k = CLng(2 ^ (8 - n - 1))
-        Dim d As Byte
-        d = v And (k - 1)
-        Dim c As Byte
-        c = d * CLng(2 ^ n)
-        If v And k Then
-            c = c Or &H80
-        End If
-        ret = c
-    End If
-    bitShiftLeft = ret
-End Function
-
-Private Function bitShiftRight(v As Byte, n As Integer) As Byte
-    Dim ret As Byte
-    If n = 0 Then
-        ret = v
-    Else
-        Dim y As Byte
-        y = v And &H7F
-        Dim z As Byte
-        If n = 32 - 1 Then
-            z = 0
-        Else
-            z = y \ CLng(2 ^ n)
-        End If
-        If y <> v Then
-            z = z Or CLng(2 ^ (8 - n - 1))
-        End If
-        ret = z
-    End If
-    bitShiftRight = ret
-End Function
-
-Private Function encodeBase64(ByRef arr() As Byte) As String
+Public Function encodeBase64(ByRef arr() As Byte) As String
     Dim arrLen As Integer
     Dim str As String
     Dim b0 As Integer
@@ -178,7 +138,7 @@ Private Function encodeBase64(ByRef arr() As Byte) As String
     encodeBase64 = str
 End Function
 
-Private Function decodeBase64(ByRef str As String) As Byte()
+Public Function decodeBase64(ByRef str As String) As Byte()
     Dim arr() As Byte
     Dim i As Integer
     Dim j As Integer
@@ -235,6 +195,64 @@ Private Function decodeBase64(ByRef str As String) As Byte()
     decodeBase64 = arr
 End Function
 
+Private Function bitInvert(v As Byte) As Byte
+    bitInvert = (v Xor 255)
+End Function
+
+Private Function bitRotateLeft(v As Byte, n As Integer) As Byte
+    n = n Mod 8
+    Dim ret As Byte
+    ret = bitShiftLeft(v, n) Or bitShiftRight(v, (8 - n))
+    bitRotateLeft = ret
+End Function
+
+Private Function bitRotateRight(v As Byte, n As Integer) As Byte
+    n = n Mod 8
+    Dim ret As Byte
+    ret = bitShiftRight(v, n) Or bitShiftLeft(v, (8 - n))
+    bitRotateRight = ret
+End Function
+
+Private Function bitShiftLeft(v As Byte, n As Integer) As Byte
+    Dim ret As Byte
+    If n = 0 Then
+        ret = v
+    Else
+        Dim k As Byte
+        k = CLng(2 ^ (8 - n - 1))
+        Dim d As Byte
+        d = v And (k - 1)
+        Dim c As Byte
+        c = d * CLng(2 ^ n)
+        If v And k Then
+            c = c Or &H80
+        End If
+        ret = c
+    End If
+    bitShiftLeft = ret
+End Function
+
+Private Function bitShiftRight(v As Byte, n As Integer) As Byte
+    Dim ret As Byte
+    If n = 0 Then
+        ret = v
+    Else
+        Dim y As Byte
+        y = v And &H7F
+        Dim z As Byte
+        If n = 8 - 1 Then
+            z = 0
+        Else
+            z = y \ CLng(2 ^ n)
+        End If
+        If y <> v Then
+            z = z Or CLng(2 ^ (8 - n - 1))
+        End If
+        ret = z
+    End If
+    bitShiftRight = ret
+End Function
+
 Private Function arrPush(ByRef arr As Variant, val As Variant)
     ReDim Preserve arr(UBound(arr) + 1)
     arr(UBound(arr) - 1) = val
@@ -276,4 +294,3 @@ Private Function utf8BytesToStr(ByRef arr() As Byte) As String
     End With
     utf8BytesToStr = str
 End Function
-
