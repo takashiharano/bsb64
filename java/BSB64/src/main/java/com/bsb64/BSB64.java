@@ -1,4 +1,4 @@
-package bsb64;
+package com.bsb64;
 
 import java.util.Base64;
 
