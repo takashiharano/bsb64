@@ -1,4 +1,6 @@
 Attribute VB_Name = "BSB64"
+' https://bsb64.com/
+
 ' Plain text to BSB64 encoded string
 Public Function encodeBSB64Str(str As String, n As Integer) As String
     Dim arr() As Byte

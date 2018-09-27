@@ -1,3 +1,6 @@
+/*!
+ * https://bsb64.com/
+ */
 BSB64 = {
   encode: function(arr, n) {
     var fn = BSB64.bit8.rotateLeft;
