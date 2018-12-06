@@ -1,7 +1,13 @@
 /*!
+ * BSB64
+ * Copyright 2018 Takashi Harano
+ * Released under the MIT license
  * https://bsb64.com/
  */
 BSB64 = {
+  /**
+   * Byte array to BSB64 encoded string
+   */
   encode: function(arr, n) {
     var fn = BSB64.bit8.rotateLeft;
     if (n % 8 == 0) {
@@ -15,6 +21,9 @@ BSB64 = {
     return str;
   },
 
+  /**
+   * BSB64 encoded string to Byte array
+   */
   decode: function(bsb64, n) {
     var fn = BSB64.bit8.rotateRight;
     if (n % 8 == 0) {
@@ -26,6 +35,22 @@ BSB64 = {
       arr.push(fn(buf[i], n));
     }
     return arr;
+  },
+
+  /**
+   * Plain text to BSB64 encoded string
+   */
+  encodeString: function(str, n) {
+    var arr = DebugJS.UTF8.toByte(str);
+    return BSB64.encode(arr, n);
+  },
+
+  /**
+   * BSB64 encoded string to Plain text
+   */
+  decodeString: function(str, n) {
+    var arr = BSB64.decode(str, n);
+    return BSB64.UTF8.fromByte(arr);
   },
 
   bit8: {
@@ -98,6 +123,52 @@ BSB64 = {
         }
       }
       return arr;
+    }
+  },
+
+  UTF8: {
+    toByte: function(s) {
+      var a = [];
+      if (!s) return a;
+      for (var i = 0; i < s.length; i++) {
+        var c = s.charCodeAt(i);
+        if (c <= 0x7F) {
+          a.push(c);
+        } else if (c <= 0x07FF) {
+          a.push(((c >> 6) & 0x1F) | 0xC0);
+          a.push((c & 0x3F) | 0x80);
+        } else {
+          a.push(((c >> 12) & 0x0F) | 0xE0);
+          a.push(((c >> 6) & 0x3F) | 0x80);
+          a.push((c & 0x3F) | 0x80);
+        }
+      }
+      return a;
+    },
+
+    fromByte: function(a) {
+      if (!a) return null;
+      var s = '';
+      var i, c;
+      while (i = a.shift()) {
+        if (i <= 0x7F) {
+          s += String.fromCharCode(i);
+        } else if (i <= 0xDF) {
+          c = ((i & 0x1F) << 6);
+          c += a.shift() & 0x3F;
+          s += String.fromCharCode(c);
+        } else if (i <= 0xE0) {
+          c = ((a.shift() & 0x1F) << 6) | 0x800;
+          c += a.shift() & 0x3F;
+          s += String.fromCharCode(c);
+        } else {
+          c = ((i & 0x0F) << 12);
+          c += (a.shift() & 0x3F) << 6;
+          c += a.shift() & 0x3F;
+          s += String.fromCharCode(c);
+        }
+      }
+      return s;
     }
   }
 };
