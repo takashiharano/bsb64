@@ -1,7 +1,9 @@
 Attribute VB_Name = "BSB64"
 ' https://bsb64.com/
 
+''
 ' Plain text to BSB64 encoded string
+'
 Public Function encodeBSB64Str(str As String, n As Integer) As String
     Dim arr() As Byte
     Dim ret As String
@@ -10,7 +12,9 @@ Public Function encodeBSB64Str(str As String, n As Integer) As String
     encodeBSB64Str = ret
 End Function
 
+''
 ' BSB64 encoded string to Plain text
+'
 Public Function decodeBSB64Str(str As String, n As Integer) As String
     Dim arr() As Byte
     Dim ret As String
@@ -19,7 +23,9 @@ Public Function decodeBSB64Str(str As String, n As Integer) As String
     decodeBSB64Str = ret
 End Function
 
+''
 ' Plain text to Base64 encoded string
+'
 Public Function encodeBase64Str(str As String) As String
     Dim arr() As Byte
     Dim ret As String
@@ -28,7 +34,9 @@ Public Function encodeBase64Str(str As String) As String
     encodeBase64Str = ret
 End Function
 
+''
 ' Base64 encoded string to Plain text
+'
 Public Function decodeBase64Str(str As String) As String
     Dim arr() As Byte
     Dim ret As String
@@ -82,12 +90,6 @@ Public Function encodeBase64(ByRef arr() As Byte) As String
     Dim codePoints(3) As Integer
     Dim idx As Integer
 
-    arrLen = UBound(arr)
-    If arrLen = 0 Then
-        encodeBase64 = ""
-        Exit Function
-    End If
-
     tbl(64) = 61
     tbl(63) = 47
     tbl(62) = 43
@@ -102,6 +104,7 @@ Public Function encodeBase64(ByRef arr() As Byte) As String
     Next i
 
     str = ""
+    arrLen = UBound(arr)
     For i = 0 To arrLen Step 3
         b0 = 0
         b1 = 0
