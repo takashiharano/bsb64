@@ -8,26 +8,28 @@ The detail of the mechanism is available at https://bsb64.com/
 ## Usage
 Java:
 ```Java
-BSB64.encodeString("abc", 1);
-BSB64.decodeString("wsTG", 1);
+String encoded = BSB64.encodeString("abc", 1);
+String decoded = BSB64.decodeString("wsTG", 1);
 ```
 
 JavaScript:
 ```JavaSctipt
-BSB64.encodeString('abc', 1);
-BSB64.decodeString('wsTG', 1);
+var encoded = BSB64.encodeString('abc', 1);
+var decoded = BSB64.decodeString('wsTG', 1);
 ```
 
 Python:
 ```Python
-bsb64.encode_str('abc', 1)
-bsb64.decode_str('wsTG', 1)
+encoded = bsb64.encode_str('abc', 1)
+decoded = bsb64.decode_str('wsTG', 1)
 ```
 
 Visual Basic:
 ```Visual Basic
-BSB64.encodeBSB64Str("abc", 1)
-BSB64.decodeBSB64Str("wsTG", 1)
+Dim encoded As String
+Dim decoded As String
+encoded = BSB64.encodeBSB64Str("abc", 1)
+decoded = BSB64.decodeBSB64Str("wsTG", 1)
 ```
 
 ## Notice
