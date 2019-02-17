@@ -23,3 +23,6 @@ Visual Basic:
 BSB64.encodeBSB64Str("abc", 1)
 BSB64.decodeBSB64Str("wsTG", 1)
 ```
+
+## Notice
+BSB64 is not intended to be used where secrecy is of any concern.
