@@ -1,7 +1,9 @@
 BSB64
 =====================
 
-BSB64 is a specification and implementation for the simple encryption.
+BSB64 is a specification and implementation for the simple encryption.  
+The encrypted data is seemingly Base64 encoded characters, but it is impossible to decode in Base64.  
+The detail of the mechanism is available at https://bsb64.com/
 
 ## Usage
 Java:
@@ -21,4 +23,3 @@ Visual Basic:
 BSB64.encodeBSB64Str("abc", 1)
 BSB64.decodeBSB64Str("wsTG", 1)
 ```
-
