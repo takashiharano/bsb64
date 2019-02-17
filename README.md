@@ -18,6 +18,12 @@ BSB64.encodeString('abc', 1);
 BSB64.decodeString('wsTG', 1);
 ```
 
+Python:
+```Python
+bsb64.encode_str('abc', 1)
+bsb64.decode_str('wsTG', 1)
+```
+
 Visual Basic:
 ```Visual Basic
 BSB64.encodeBSB64Str("abc", 1)
