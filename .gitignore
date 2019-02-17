@@ -4,3 +4,4 @@ java/BSB64/.project
 java/BSB64/bin/*
 js/index.html
 vba/BSB64.xlsm
+*.pyc
