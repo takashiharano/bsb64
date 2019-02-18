@@ -1,26 +1,63 @@
 Attribute VB_Name = "BSB64"
+' BSB64 (Bit Shifted Base64)
+' Copyright 2018-2019 Takashi Harano
+' Released under the MIT license
 ' https://bsb64.com/
 
 ''
 ' Plain text to BSB64 encoded string
 '
-Public Function encodeBSB64Str(str As String, n As Integer) As String
+Public Function encodeStr(str As String, n As Integer) As String
     Dim arr() As Byte
     Dim ret As String
     arr = strToUtf8Bytes(str)
-    ret = encodeBSB64(arr, n)
-    encodeBSB64Str = ret
+    ret = encode(arr, n)
+    encodeStr = ret
+End Function
+
+Public Function encode(arr() As Byte, n As Integer) As String
+    Dim i As Integer
+    Dim arrLen As Integer
+    Dim buf() As Byte
+    arrLen = UBound(arr)
+    ReDim buf(arrLen)
+    For i = 0 To arrLen
+        If n Mod 8 = 0 Then
+            buf(i) = bitInvert(arr(i))
+        Else
+            buf(i) = bitRotateLeft(arr(i), n)
+        End If
+    Next
+    encode = encodeBase64(buf)
 End Function
 
 ''
 ' BSB64 encoded string to Plain text
 '
-Public Function decodeBSB64Str(str As String, n As Integer) As String
+Public Function decodeStr(str As String, n As Integer) As String
     Dim arr() As Byte
     Dim ret As String
-    arr = decodeBSB64(str, n)
+    arr = decode(str, n)
     ret = utf8BytesToStr(arr)
-    decodeBSB64Str = ret
+    decodeStr = ret
+End Function
+
+Public Function decode(BSB64 As String, n As Integer) As Byte()
+    Dim i As Integer
+    Dim bufLen As Integer
+    Dim buf() As Byte
+    Dim arr() As Byte
+    buf = decodeBase64(BSB64)
+    bufLen = UBound(buf)
+    ReDim arr(bufLen)
+    For i = 0 To bufLen
+        If n Mod 8 = 0 Then
+            arr(i) = bitInvert(buf(i))
+        Else
+            arr(i) = bitRotateRight(buf(i), n)
+        End If
+    Next
+    decode = arr
 End Function
 
 ''
@@ -43,40 +80,6 @@ Public Function decodeBase64Str(str As String) As String
     arr = decodeBase64(str)
     ret = utf8BytesToStr(arr)
     decodeBase64Str = ret
-End Function
-
-Public Function encodeBSB64(arr() As Byte, n As Integer) As String
-    Dim i As Integer
-    Dim arrLen As Integer
-    Dim buf() As Byte
-    arrLen = UBound(arr)
-    ReDim buf(arrLen)
-    For i = 0 To arrLen
-        If n Mod 8 = 0 Then
-            buf(i) = bitInvert(arr(i))
-        Else
-            buf(i) = bitRotateLeft(arr(i), n)
-        End If
-    Next
-    encodeBSB64 = encodeBase64(buf)
-End Function
-
-Public Function decodeBSB64(BSB64 As String, n As Integer) As Byte()
-    Dim i As Integer
-    Dim bufLen As Integer
-    Dim buf() As Byte
-    Dim arr() As Byte
-    buf = decodeBase64(BSB64)
-    bufLen = UBound(buf)
-    ReDim arr(bufLen)
-    For i = 0 To bufLen
-        If n Mod 8 = 0 Then
-            arr(i) = bitInvert(buf(i))
-        Else
-            arr(i) = bitRotateRight(buf(i), n)
-        End If
-    Next
-    decodeBSB64 = arr
 End Function
 
 Public Function encodeBase64(ByRef arr() As Byte) As String
