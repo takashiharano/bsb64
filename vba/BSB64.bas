@@ -180,7 +180,6 @@ Public Function decodeBase64(ByRef str As String) As Byte()
         tbl(idx) = i
     Next
 
-    ReDim arr(0)
     For i = 1 To Len(str) Step 4
         For j = 0 To 3
             If (i + j) > Len(str) Then
@@ -262,8 +261,13 @@ Private Function bitShiftRight(v As Byte, n As Integer) As Byte
 End Function
 
 Private Function arrPush(ByRef arr As Variant, val As Variant)
+    On Error GoTo ArrInit
     ReDim Preserve arr(UBound(arr) + 1)
-    arr(UBound(arr) - 1) = val
+    arr(UBound(arr)) = val
+    Exit Function
+ArrInit:
+    ReDim arr(0)
+    arr(0) = val
 End Function
 
 Private Function arrPop(ByRef arr As Variant)
