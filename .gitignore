@@ -7,3 +7,4 @@ vba/BSB64.xlsm
 *.pyc
 vba/~$BSB64.xlsm
 /bin/
+target/*
