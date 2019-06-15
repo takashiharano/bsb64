@@ -98,6 +98,7 @@ public class BSB64 {
    *          The number of shifting
    * @return A newly-allocated byte array containing the decoded bytes.
    * @throws RuntimeException
+   *           If failed to decode
    */
   public static byte[] decode(String src, int n) throws RuntimeException {
     byte[] buf = Base64.getDecoder().decode(src);
