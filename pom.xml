@@ -65,6 +65,14 @@
           <docencoding>UTF-8</docencoding>
           <locale>en_US</locale>
         </configuration>
+        <executions>
+          <execution>
+            <phase>verify</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
 
       <plugin>
