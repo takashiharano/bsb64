@@ -41,7 +41,7 @@ BSB64 = {
    * Plain text to BSB64 encoded string
    */
   encodeString: function(str, n) {
-    var arr = DebugJS.UTF8.toByte(str);
+    var arr = BSB64.UTF8.toByte(str);
     return BSB64.encode(arr, n);
   },
 
