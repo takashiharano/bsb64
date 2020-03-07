@@ -41,7 +41,7 @@ BSB64 = {
    * Plain text to BSB64 encoded string
    */
   encodeString: function(str, n) {
-    var arr = BSB64.UTF8.toByte(str);
+    var arr = BSB64.UTF8.toByteArray(str);
     return BSB64.encode(arr, n);
   },
 
@@ -50,7 +50,7 @@ BSB64 = {
    */
   decodeString: function(str, n) {
     var arr = BSB64.decode(str, n);
-    return BSB64.UTF8.fromByte(arr);
+    return BSB64.UTF8.fromByteArray(arr);
   },
 
   bit8: {
@@ -127,48 +127,41 @@ BSB64 = {
   },
 
   UTF8: {
-    toByte: function(s) {
+    toByteArray: function(s) {
       var a = [];
       if (!s) return a;
-      for (var i = 0; i < s.length; i++) {
-        var c = s.charCodeAt(i);
+      var chs = s.match(/[\uD800-\uDBFF][\uDC00-\uDFFF]|[\s\S]/g) || [];
+      for (var i = 0; i < chs.length; i++) {
+        var ch = chs[i];
+        var c = ch.charCodeAt(0);
         if (c <= 0x7F) {
           a.push(c);
-        } else if (c <= 0x07FF) {
-          a.push(((c >> 6) & 0x1F) | 0xC0);
-          a.push((c & 0x3F) | 0x80);
         } else {
-          a.push(((c >> 12) & 0x0F) | 0xE0);
-          a.push(((c >> 6) & 0x3F) | 0x80);
-          a.push((c & 0x3F) | 0x80);
+          var e = encodeURIComponent(ch);
+          var w = e.split('%');
+          for (var j = 1; j < w.length; j++) {
+            a.push(('0x' + w[j]) | 0);
+          }
         }
       }
       return a;
     },
 
-    fromByte: function(a) {
-      if (!a) return null;
-      var s = '';
-      var i, c;
-      while (i = a.shift()) {
-        if (i <= 0x7F) {
-          s += String.fromCharCode(i);
-        } else if (i <= 0xDF) {
-          c = ((i & 0x1F) << 6);
-          c += a.shift() & 0x3F;
-          s += String.fromCharCode(c);
-        } else if (i <= 0xE0) {
-          c = ((a.shift() & 0x1F) << 6) | 0x800;
-          c += a.shift() & 0x3F;
-          s += String.fromCharCode(c);
-        } else {
-          c = ((i & 0x0F) << 12);
-          c += (a.shift() & 0x3F) << 6;
-          c += a.shift() & 0x3F;
-          s += String.fromCharCode(c);
-        }
+    fromByteArray: function(b) {
+      if (!b) return null;
+      var e = '';
+      for (var i = 0; i < b.length; i++) {
+        e += '%' + BSB64.toHex(b[i]);
       }
-      return s;
+      return decodeURIComponent(e);
     }
+  },
+
+  toHex: function(v) {
+    var hex = parseInt(v).toString(16).toUpperCase();
+    if (hex.length < 2) {
+      hex = ('0' + hex).slice(-2);
+    }
+    return hex;
   }
 };
