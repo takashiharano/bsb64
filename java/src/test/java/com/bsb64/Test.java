@@ -3,6 +3,7 @@ package com.bsb64;
 import java.util.ArrayList;
 
 public class Test {
+
   public static void main(String args[]) {
     test1();
     test1Fr();
@@ -163,4 +164,5 @@ public class Test {
     }
     return arr;
   }
+
 }

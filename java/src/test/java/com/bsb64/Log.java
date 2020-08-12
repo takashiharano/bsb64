@@ -1,6 +1,7 @@
 package com.bsb64;
 
 public class Log {
+
   public static void d(Object o) {
     out(o);
   }
@@ -34,4 +35,5 @@ public class Log {
       Log.d((double) delta / 1000000 + "ms");
     }
   }
+
 }

@@ -1,10 +1,4 @@
-java/BSB64/.settings/*
-java/BSB64/.classpath
-java/BSB64/.project
-java/BSB64/bin/*
 js/test.html
+python/__pycache__/
 vba/BSB64.xlsm
-*.pyc
 vba/~$BSB64.xlsm
-/bin/
-target/*

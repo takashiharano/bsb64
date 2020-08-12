@@ -20,7 +20,7 @@
   <developers>
     <developer>
       <name>Takashi Harano</name>
-      <url>https://www.takashiharano.com/</url>
+      <url>https://takashiharano.com/</url>
     </developer>
   </developers>
 
@@ -97,7 +97,6 @@
           <autoReleaseAfterClose>true</autoReleaseAfterClose>
         </configuration>
       </plugin>
-
     </plugins>
   </build>
 
@@ -131,7 +130,6 @@
           </plugin>
         </plugins>
       </build>
-
     </profile>
   </profiles>
 
