@@ -25,9 +25,9 @@
   </developers>
 
   <scm>
-    <connection>scm:git:git://github.com/takashiharano/BSB64.git</connection>
-    <developerConnection>scm:git:ssh://github.com:takashiharano/BSB64.git</developerConnection>
-    <url>https://github.com/takashiharano/BSB64</url>
+    <connection>scm:git:git://github.com/takashiharano/bsb64.git</connection>
+    <developerConnection>scm:git:ssh://github.com:takashiharano/bsb64.git</developerConnection>
+    <url>https://github.com/takashiharano/bsb64</url>
   </scm>
 
   <properties>
