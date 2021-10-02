@@ -1,21 +1,20 @@
-Attribute VB_Name = "BSB64"
 ' BSB64 (Bit Shifted Base64)
-' Copyright 2018-2019 Takashi Harano
+' Copyright 2018 Takashi Harano
 ' Released under the MIT license
 ' https://bsb64.com/
 
 ''
 ' Plain text to BSB64 encoded string
 '
-Public Function encodeStr(str As String, n As Integer) As String
+Public Function EncodeString(str As String, n As Integer) As String
     Dim arr() As Byte
     Dim ret As String
-    arr = strToUtf8Bytes(str)
-    ret = encode(arr, n)
-    encodeStr = ret
+    arr = StringToUtf8Bytes(str)
+    ret = Encode(arr, n)
+    EncodeString = ret
 End Function
 
-Public Function encode(arr() As Byte, n As Integer) As String
+Public Function Encode(arr() As Byte, n As Integer) As String
     Dim i As Integer
     Dim arrLen As Integer
     Dim buf() As Byte
@@ -23,66 +22,66 @@ Public Function encode(arr() As Byte, n As Integer) As String
     ReDim buf(arrLen)
     For i = 0 To arrLen
         If n Mod 8 = 0 Then
-            buf(i) = bitInvert(arr(i))
+            buf(i) = InvertBit(arr(i))
         Else
-            buf(i) = bitRotateLeft(arr(i), n)
+            buf(i) = RotateBitLeft(arr(i), n)
         End If
     Next
-    encode = encodeBase64(buf)
+    Encode = EncodeBase64(buf)
 End Function
 
 ''
 ' BSB64 encoded string to Plain text
 '
-Public Function decodeStr(str As String, n As Integer) As String
+Public Function DecodeString(str As String, n As Integer) As String
     Dim arr() As Byte
     Dim ret As String
-    arr = decode(str, n)
-    ret = utf8BytesToStr(arr)
-    decodeStr = ret
+    arr = Decode(str, n)
+    ret = Utf8BytesToString(arr)
+    DecodeString = ret
 End Function
 
-Public Function decode(BSB64 As String, n As Integer) As Byte()
+Public Function Decode(src As String, n As Integer) As Byte()
     Dim i As Integer
     Dim bufLen As Integer
     Dim buf() As Byte
     Dim arr() As Byte
-    buf = decodeBase64(BSB64)
+    buf = DecodeBase64(src)
     bufLen = UBound(buf)
     ReDim arr(bufLen)
     For i = 0 To bufLen
         If n Mod 8 = 0 Then
-            arr(i) = bitInvert(buf(i))
+            arr(i) = InvertBit(buf(i))
         Else
-            arr(i) = bitRotateRight(buf(i), n)
+            arr(i) = RotateBitRight(buf(i), n)
         End If
     Next
-    decode = arr
+    Decode = arr
 End Function
 
 ''
 ' Plain text to Base64 encoded string
 '
-Public Function encodeBase64Str(str As String) As String
+Public Function EncodeBase64String(str As String) As String
     Dim arr() As Byte
     Dim ret As String
-    arr = strToUtf8Bytes(str)
-    ret = encodeBase64(arr)
-    encodeBase64Str = ret
+    arr = StringToUtf8Bytes(str)
+    ret = EncodeBase64(arr)
+    EncodeBase64String = ret
 End Function
 
 ''
 ' Base64 encoded string to Plain text
 '
-Public Function decodeBase64Str(str As String) As String
+Public Function DecodeBase64String(str As String) As String
     Dim arr() As Byte
     Dim ret As String
-    arr = decodeBase64(str)
-    ret = utf8BytesToStr(arr)
-    decodeBase64Str = ret
+    arr = DecodeBase64(str)
+    ret = Utf8BytesToString(arr)
+    DecodeBase64String = ret
 End Function
 
-Public Function encodeBase64(ByRef arr() As Byte) As String
+Public Function EncodeBase64(ByRef arr() As Byte) As String
     Dim arrLen As Integer
     Dim str As String
     Dim b0 As Integer
@@ -143,10 +142,10 @@ Public Function encodeBase64(ByRef arr() As Byte) As String
         str = str & ChrW(codePoints(0)) & ChrW(codePoints(1)) & ChrW(codePoints(2)) & ChrW(codePoints(3))
     Next
 
-    encodeBase64 = str
+    EncodeBase64 = str
 End Function
 
-Public Function decodeBase64(ByRef str As String) As Byte()
+Public Function DecodeBase64(ByRef str As String) As Byte()
     Dim arr() As Byte
     Dim i As Integer
     Dim j As Integer
@@ -187,40 +186,40 @@ Public Function decodeBase64(ByRef str As String) As Byte()
             End If
             buf(j) = tbl(Asc(Mid(str, i + j, 1)))
         Next
-        Call arrPush(arr, ((buf(0) * 2 ^ 2) Or (buf(1) And 63) \ 2 ^ 4))
-        Call arrPush(arr, (((buf(1) And 15) * 2 ^ 4) Or (buf(2) And 63) \ 2 ^ 2))
-        Call arrPush(arr, (((buf(2) And 3) * 2 ^ 6) Or (buf(3) And 63)))
+        Call ArrayPush(arr, ((buf(0) * 2 ^ 2) Or (buf(1) And 63) \ 2 ^ 4))
+        Call ArrayPush(arr, (((buf(1) And 15) * 2 ^ 4) Or (buf(2) And 63) \ 2 ^ 2))
+        Call ArrayPush(arr, (((buf(2) And 3) * 2 ^ 6) Or (buf(3) And 63)))
     Next
 
     If buf(3) = 64 Then
-        Call arrPop(arr)
+        Call ArrayPop(arr)
         If buf(2) = 64 Then
-            Call arrPop(arr)
+            Call ArrayPop(arr)
         End If
     End If
 
-    decodeBase64 = arr
+    DecodeBase64 = arr
 End Function
 
-Private Function bitInvert(v As Byte) As Byte
-    bitInvert = (v Xor 255)
+Private Function InvertBit(v As Byte) As Byte
+    InvertBit = (v Xor 255)
 End Function
 
-Private Function bitRotateLeft(v As Byte, n As Integer) As Byte
+Private Function RotateBitLeft(v As Byte, n As Integer) As Byte
     n = n Mod 8
     Dim ret As Byte
-    ret = bitShiftLeft(v, n) Or bitShiftRight(v, (8 - n))
-    bitRotateLeft = ret
+    ret = ShiftBitLeft(v, n) Or ShiftBitRight(v, (8 - n))
+    RotateBitLeft = ret
 End Function
 
-Private Function bitRotateRight(v As Byte, n As Integer) As Byte
+Private Function RotateBitRight(v As Byte, n As Integer) As Byte
     n = n Mod 8
     Dim ret As Byte
-    ret = bitShiftRight(v, n) Or bitShiftLeft(v, (8 - n))
-    bitRotateRight = ret
+    ret = ShiftBitRight(v, n) Or ShiftBitLeft(v, (8 - n))
+    RotateBitRight = ret
 End Function
 
-Private Function bitShiftLeft(v As Byte, n As Integer) As Byte
+Private Function ShiftBitLeft(v As Byte, n As Integer) As Byte
     Dim ret As Byte
     If n = 0 Then
         ret = v
@@ -236,10 +235,10 @@ Private Function bitShiftLeft(v As Byte, n As Integer) As Byte
         End If
         ret = c
     End If
-    bitShiftLeft = ret
+    ShiftBitLeft = ret
 End Function
 
-Private Function bitShiftRight(v As Byte, n As Integer) As Byte
+Private Function ShiftBitRight(v As Byte, n As Integer) As Byte
     Dim ret As Byte
     If n = 0 Then
         ret = v
@@ -257,10 +256,10 @@ Private Function bitShiftRight(v As Byte, n As Integer) As Byte
         End If
         ret = z
     End If
-    bitShiftRight = ret
+    ShiftBitRight = ret
 End Function
 
-Private Function arrPush(ByRef arr As Variant, val As Variant)
+Private Function ArrayPush(ByRef arr As Variant, val As Variant)
     On Error GoTo ArrInit
     ReDim Preserve arr(UBound(arr) + 1)
     arr(UBound(arr)) = val
@@ -270,11 +269,11 @@ ArrInit:
     arr(0) = val
 End Function
 
-Private Function arrPop(ByRef arr As Variant)
+Private Function ArrayPop(ByRef arr As Variant)
     ReDim Preserve arr(UBound(arr) - 1)
 End Function
 
-Private Function strToUtf8Bytes(ByRef sData As String) As Byte()
+Private Function StringToUtf8Bytes(ByRef sData As String) As Byte()
     Dim arr() As Byte
     With CreateObject("ADODB.Stream")
         .Mode = 3 'adModeReadWrite
@@ -288,10 +287,10 @@ Private Function strToUtf8Bytes(ByRef sData As String) As Byte()
         arr = .Read
         .Close
     End With
-    strToUtf8Bytes = arr
+    StringToUtf8Bytes = arr
 End Function
 
-Private Function utf8BytesToStr(ByRef arr() As Byte) As String
+Private Function Utf8BytesToString(ByRef arr() As Byte) As String
     Dim str As String
     With CreateObject("ADODB.Stream")
         .Mode = 3 'adModeReadWrite
@@ -304,5 +303,5 @@ Private Function utf8BytesToStr(ByRef arr() As Byte) As String
         str = .ReadText
         .Close
     End With
-    utf8BytesToStr = str
+    Utf8BytesToString = str
 End Function

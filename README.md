@@ -28,8 +28,8 @@ Visual Basic:
 ```Visual Basic
 Dim encoded As String
 Dim decoded As String
-encoded = BSB64.encodeStr("abc", 1)
-decoded = BSB64.decodeStr("wsTG", 1)
+encoded = BSB64.EncodeString("abc", 1)
+decoded = BSB64.DecodeString("wsTG", 1)
 ```
 
 ## Notice
