@@ -9,13 +9,13 @@ import base64
 ENCODING = 'utf-8'
 
 #------------------------------------------------------------------------------
-# Encodes a str to BSB64 encoded str
-def encode_str(src, n, encoding=ENCODING):
+# Encodes a string to BSB64 encoded string
+def encode_string(src, n, encoding=ENCODING):
   b = src.encode(encoding)
-  return encode_to_str(b, n, encoding)
+  return encode_to_string(b, n, encoding)
 
-# Encodes bytes to BSB64 encoded str
-def encode_to_str(src, n, encoding=ENCODING):
+# Encodes bytes to BSB64 encoded string
+def encode_to_string(src, n, encoding=ENCODING):
   encoded = encode(src, n)
   s = encoded.decode(encoding)
   return s
@@ -37,8 +37,8 @@ def encode(src, n):
   return encoded
 
 #------------------------------------------------------------------------------
-# Decodes BSB64 encoded str to a str
-def decode_str(src, n, encoding=ENCODING):
+# Decodes BSB64 encoded string to a string
+def decode_string(src, n, encoding=ENCODING):
   decoded = decode(src, n)
   s = decoded.decode(encoding)
   return s

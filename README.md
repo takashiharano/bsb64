@@ -20,8 +20,8 @@ var decoded = BSB64.decodeString('wsTG', 1);
 
 Python:
 ```Python
-encoded = bsb64.encode_str('abc', 1)
-decoded = bsb64.decode_str('wsTG', 1)
+encoded = bsb64.encode_string('abc', 1)
+decoded = bsb64.decode_string('wsTG', 1)
 ```
 
 Visual Basic:
