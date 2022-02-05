@@ -28,25 +28,25 @@
 #
 # [Encode]
 #  String:
-#   $s = Get-Encoded-String "<STRING>" <0-7>
+#   $s = Get-Bsb64EncodedString "<STRING>" <0-7>
 #
 #  Byte[]:
 #   [byte[]]$b = Get-Content "C:\test\file.bin" -Encoding Byte
-#   $s = Get-Encoded-String $b <0-7>
+#   $s = Get-Bsb64EncodedString $b <0-7>
 #
 # [Decode]
 #  String:
-#   $s = Get-Decoded-String "<BSB64_STRING>" <0-7>
+#   $s = Get-Bsb64DecodedString "<BSB64_STRING>" <0-7>
 #
 #  Byte[]:
-#   $b = Get-Decoded-Bytes "<BSB64_STRING>" <0-7>
+#   $b = Get-Bsb64DecodedBytes "<BSB64_STRING>" <0-7>
 #   Set-Content "C:\tmp\file.bin" -Value $b -Encoding Byte
 #------------------------------------------------------------------------------
 
 #----------------------------------------------------------
 # Byte array or plain text to BSB64 encoded string
 #----------------------------------------------------------
-function Get-Encoded-String {
+function Get-Bsb64EncodedString {
     Param (
         $Src,
         [int]$N
@@ -58,13 +58,13 @@ function Get-Encoded-String {
         $b = $Src
     }
 
-    $buf = Get-Encoded-Bytes $b $N
+    $buf = Get-Bsb64EncodedBytes $b $N
     $encoded = [System.Convert]::ToBase64String($buf)
 
     return $encoded
 }
 
-function Get-Encoded-Bytes {
+function Get-Bsb64EncodedBytes {
     Param (
         [byte[]] $Src,
         [int] $N
@@ -87,7 +87,7 @@ function Get-Encoded-Bytes {
 #----------------------------------------------------------
 # BSB64 encoded string to Byte array
 #----------------------------------------------------------
-function Get-Decoded-Bytes {
+function Get-Bsb64DecodedBytes {
     Param (
         $Src,
         [int]$N
@@ -111,13 +111,13 @@ function Get-Decoded-Bytes {
 #----------------------------------------------------------
 # BSB64 encoded string to Plain text
 #----------------------------------------------------------
-function Get-Decoded-String {
+function Get-Bsb64DecodedString {
     Param (
         $Src,
         [int]$N
     )
 
-    $buf = Get-Decoded-Bytes $Src $N
+    $buf = Get-Bsb64DecodedBytes $Src $N
     $str = [System.Text.Encoding]::UTF8.GetString($buf)
     return $str
 }

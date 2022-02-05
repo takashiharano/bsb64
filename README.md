@@ -24,6 +24,12 @@ encoded = bsb64.encode_string('abc', 1)
 decoded = bsb64.decode_string('wsTG', 1)
 ```
 
+PowerShell:
+```powershell
+$encoded = Get-Bsb64EncodedString "abc" 1
+$decoded = Get-Bsb64DecodedString "wsTG" 1
+```
+
 Visual Basic:
 ```Visual Basic
 Dim encoded As String

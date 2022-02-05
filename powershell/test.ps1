@@ -1,68 +1,68 @@
 . ".\bsb64.ps1"
 
-$s = Get-Encoded-String "abc" 1
+$s = Get-Bsb64EncodedString "abc" 1
 Write-Host $s
 
-$s = Get-Encoded-String "abc" 2
+$s = Get-Bsb64EncodedString "abc" 2
 Write-Host $s
 
-$s = Get-Encoded-String "abc" 3
+$s = Get-Bsb64EncodedString "abc" 3
 Write-Host $s
 
-$s = Get-Encoded-String "abc" 4
+$s = Get-Bsb64EncodedString "abc" 4
 Write-Host $s
 
-$s = Get-Encoded-String "abc" 5
+$s = Get-Bsb64EncodedString "abc" 5
 Write-Host $s
 
-$s = Get-Encoded-String "abc" 6
+$s = Get-Bsb64EncodedString "abc" 6
 Write-Host $s
 
-$s = Get-Encoded-String "abc" 7
+$s = Get-Bsb64EncodedString "abc" 7
 Write-Host $s
 
-$s = Get-Encoded-String "abc" 0
+$s = Get-Bsb64EncodedString "abc" 0
 Write-Host $s
 
-$s = Get-Encoded-String "abc" 8
-Write-Host $s
-
-Write-Host "-------------------------------"
-$s = Get-Decoded-String "wsTG" 1
-Write-Host $s
-
-$s = Get-Decoded-String "hYmN" 2
-Write-Host $s
-
-$s = Get-Decoded-String "CxMb" 3
-Write-Host $s
-
-$s = Get-Decoded-String "FiY2" 4
-Write-Host $s
-
-$s = Get-Decoded-String "LExs" 5
-Write-Host $s
-
-$s = Get-Decoded-String "WJjY" 6
-Write-Host $s
-
-$s = Get-Decoded-String "sDGx" 7
-Write-Host $s
-
-$s = Get-Decoded-String "np2c" 0
-Write-Host $s
-
-$s = Get-Decoded-String "np2c" 8
+$s = Get-Bsb64EncodedString "abc" 8
 Write-Host $s
 
 Write-Host "-------------------------------"
-$s = Get-Encoded-String "‚ ‚¢‚¤‚¦‚¨" 1
+$s = Get-Bsb64DecodedString "wsTG" 1
+Write-Host $s
+
+$s = Get-Bsb64DecodedString "hYmN" 2
+Write-Host $s
+
+$s = Get-Bsb64DecodedString "CxMb" 3
+Write-Host $s
+
+$s = Get-Bsb64DecodedString "FiY2" 4
+Write-Host $s
+
+$s = Get-Bsb64DecodedString "LExs" 5
+Write-Host $s
+
+$s = Get-Bsb64DecodedString "WJjY" 6
+Write-Host $s
+
+$s = Get-Bsb64DecodedString "sDGx" 7
+Write-Host $s
+
+$s = Get-Bsb64DecodedString "np2c" 0
+Write-Host $s
+
+$s = Get-Bsb64DecodedString "np2c" 8
+Write-Host $s
+
+Write-Host "-------------------------------"
+$s = Get-Bsb64EncodedString "‚ ‚¢‚¤‚¦‚¨" 1
 Write-Host $s
 
 Write-Host "-------------------------------"
 [byte[]]$b = Get-Content "C:\test\img.jpg" -Encoding Byte
-$s = Get-Encoded-String $b 1
+$s = Get-Bsb64EncodedString $b 1
 Write-Host $s
 
-$b = Get-Decoded-Bytes $s 1
+$b = Get-Bsb64DecodedBytes $s 1
 Set-Content "C:\tmp\img.jpg" -Value $b -Encoding Byte
