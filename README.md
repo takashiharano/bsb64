@@ -1,7 +1,7 @@
 BSB64
 =====================
 
-BSB64 is a specification and implementation for the simple encryption.  
+BSB64 is an algorithm for simple encryption.  
 The encrypted data is seemingly Base64 encoded characters, but it is impossible to decode in Base64.  
 The detail of the mechanism is available at https://bsb64.com/
 
