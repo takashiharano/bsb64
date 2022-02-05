@@ -122,11 +122,11 @@ public class Test {
 
   private static void test4() {
     byte[] decoded = BSB64.decode("np2c", 0);
-    Log.d("decode = " + decoded);
+    Log.d("decode =");
     Log.d(decoded);
 
     decoded = BSB64.decode("wsTG", 1);
-    Log.d("decode = " + decoded);
+    Log.d("decode =");
     Log.d(decoded);
   }
 
