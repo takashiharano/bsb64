@@ -73,12 +73,12 @@ function Get-Bsb64EncodedBytes {
     $buf = New-Object byte[] $Src.Length
 
     for ($i=0; $i -lt $Src.Length; $i++) {
-      if ($N % 8 -eq 0) {
-        $b = Get-InvertedBitPattern $Src[$i]
-      } else {
-        $b = Get-LeftRotatedBitPattern $Src[$i] $N
-      }
-      $buf[$i] = $b
+        if ($N % 8 -eq 0) {
+            $b = Get-InvertedBitPattern $Src[$i]
+        } else {
+            $b = Get-LeftRotatedBitPattern $Src[$i] $N
+        }
+        $buf[$i] = $b
     }
 
     return $buf
