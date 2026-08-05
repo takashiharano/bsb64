@@ -1,7 +1,7 @@
 ' BSB64 (Bit Shifted Base64)
 ' Copyright 2018 Takashi Harano
-' Released under the MIT license
-' https://bsb64.com/
+' Released under the MIT License
+' https://libutil.com/bsb64/
 
 ''
 ' Plain text to BSB64 encoded string

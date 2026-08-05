@@ -1,9 +1,9 @@
 BSB64
 =====================
 
-BSB64 is an algorithm for simple encryption.  
-The encrypted data is seemingly Base64 encoded characters, but it is impossible to decode in Base64.  
-The detail of the mechanism is available at https://libutil.com/bsb64/
+BSB64 is a reversible data transformation based on bit shifting and Base64 encoding.
+The resulting data resembles Base64-encoded text, but it cannot be decoded correctly using a standard Base64 decoder alone.
+Details of the algorithm are available at https://libutil.com/bsb64/.
 
 ## Usage
 Java:

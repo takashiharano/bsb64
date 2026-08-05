@@ -1,9 +1,9 @@
 # BSB64 (Bit Shifted Base64)
-# https://bsb64.com/
+# https://libutil.com/bsb64/
 #
 # The MIT License
 #
-# Copyright (c) 2022 Takashi Harano
+# Copyright 2022 Takashi Harano
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
