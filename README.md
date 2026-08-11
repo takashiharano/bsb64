@@ -8,8 +8,9 @@ Details of the algorithm are available at https://libutil.com/bsb64/.
 ## Usage
 Java:
 ```Java
-String encoded = BSB64.encodeString("abc", 1);
-String decoded = BSB64.decodeString("wsTG", 1);
+String encoded = BSB64.encode("abc", 1);
+byte[] decoded = BSB64.decode("wsTG", 1);
+String decoded = BSB64.decodeToString("wsTG", 1);
 ```
 
 JavaScript:
