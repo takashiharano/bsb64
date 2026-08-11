@@ -1,4 +1,4 @@
-package com.bsb64;
+package com.libutil;
 
 import java.util.ArrayList;
 
