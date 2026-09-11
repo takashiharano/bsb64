@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>XB64 Test</title>
+<script src="https://debugjs.net/debug.js"></script>
+<script src="../bsb64.js"></script>
+<style>
+body {
+  font-family: Consolas, Monaco, Menlo, monospace, sans-serif;
+}
+</style>
+<script>
+onReady = function() {
+  var s = document.getElementById('test-script').innerText;
+  dbg.show();
+  dbg.bat(s);
+};
+window.addEventListener('DOMContentLoaded', onReady, true);
+</script>
+</head>
+<body>
+<pre id="test-script">
+#!BAT!
+close all
+cls
+test init
+
+!__JS__!
+$TEST_DATA = [
+  {src: '', n: 0, b64: ''},
+  {src: '', n: 1, b64: ''},
+
+  {src: 'abc', n: 0, b64: 'np2c'},
+  {src: 'abc', n: 1, b64: 'wsTG'},
+  {src: 'abc', n: 2, b64: 'hYmN'},
+  {src: 'abc', n: 3, b64: 'CxMb'},
+  {src: 'abc', n: 4, b64: 'FiY2'},
+  {src: 'abc', n: 5, b64: 'LExs'},
+  {src: 'abc', n: 6, b64: 'WJjY'},
+  {src: 'abc', n: 7, b64: 'sDGx'},
+
+  {src: 'あいう', n: 0, b64: 'HH59HH57HH55'},
+  {src: 'あいう', n: 1, b64: 'xwMFxwMJxwMN'},
+  {src: 'あいう', n: 2, b64: 'jwYKjwYSjwYa'},
+  {src: 'あいう', n: 3, b64: 'HwwUHwwkHww0'},
+  {src: 'あいう', n: 4, b64: 'PhgoPhhIPhho'},
+  {src: 'あいう', n: 5, b64: 'fDBQfDCQfDDQ'},
+  {src: 'あいう', n: 6, b64: '+GCg+GAh+GCh'},
+  {src: 'あいう', n: 7, b64: '8cBB8cBC8cBD'}
+]
+!__JS__!
+
+#----------------------------------------------------------
+test set id "bsb64"
+
+${i} = 0
+LOOP (${i} < $TEST_DATA.length) (
+  ${ret} = bsb64.encode($TEST_DATA[${i}].src, $TEST_DATA[${i}].n)
+  test verify ${ret} == $TEST_DATA[${i}].b64
+  ${i}++
+)
+
+${i} = 0
+LOOP (${i} < $TEST_DATA.length) (
+  ${ret} = bsb64.decodeToString($TEST_DATA[${i}].b64, $TEST_DATA[${i}].n)
+  test verify ${ret} == $TEST_DATA[${i}].src
+  ${i}++
+)
+
+test end
+test result
+</pre>
+</body>
+</html>

@@ -1,4 +1,7 @@
-js/test.html
 python/__pycache__/
 vba/BSB64.xlsm
 vba/~$BSB64.xlsm
+js/eslint.config.mjs
+js/_ESLint.bat
+js/_linter.bat
+js/_linter.txt

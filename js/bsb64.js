@@ -4,32 +4,46 @@
  * Released under the MIT License
  * https://libutil.com/bsb64/
  */
-BSB64 = {
+var bsb64 = {
   /**
-   * Byte array to BSB64 encoded string
+   * Encodes a byte array or string to a BSB64 string.
+   *
+   * Strings are converted to UTF-8 before BSB64 encoding.
+   * If n is 0, the bits are inverted instead of rotated.
+   *
+   * @param {number[]|string} src Source byte array or string.
+   * @param {number} n Number of bits to rotate (0-7).
+   * @returns {string} BSB64 encoded string.
    */
-  encode: function(arr, n) {
-    var fn = BSB64.bit8.rotateLeft;
+  encode: function(src, n) {
+    if (typeof src == 'string') src = bsb64.utf8.toByteArray(src);
+    var fn = bsb64.bit8.rotateLeft;
     if (n % 8 == 0) {
-      fn = BSB64.bit8.invert;
+      fn = bsb64.bit8.invert;
     }
     var buf = [];
-    for (var i = 0; i < arr.length; i++) {
-      buf.push(fn(arr[i], n));
+    for (var i = 0; i < src.length; i++) {
+      buf.push(fn(src[i], n));
     }
-    var str = BSB64.Base64.encode(buf);
+    var str = bsb64.base64.encode(buf);
     return str;
   },
 
   /**
-   * BSB64 encoded string to Byte array
+   * Decodes a BSB64 string to a byte array.
+   *
+   * If n is 0, the bits are inverted instead of rotated.
+   *
+   * @param {string} src BSB64 encoded string.
+   * @param {number} n Number of bits used for encoding (0-7).
+   * @returns {number[]} Decoded byte array.
    */
-  decode: function(bsb64, n) {
-    var fn = BSB64.bit8.rotateRight;
+  decode: function(src, n) {
+    var fn = bsb64.bit8.rotateRight;
     if (n % 8 == 0) {
-      fn = BSB64.bit8.invert;
+      fn = bsb64.bit8.invert;
     }
-    var buf = BSB64.Base64.decode(bsb64);
+    var buf = bsb64.base64.decode(src);
     var arr = [];
     for (var i = 0; i < buf.length; i++) {
       arr.push(fn(buf[i], n));
@@ -38,19 +52,18 @@ BSB64 = {
   },
 
   /**
-   * Plain text to BSB64 encoded string
+   * Decodes a BSB64 string to a string.
+   *
+   * The decoded byte array is interpreted as UTF-8.
+   * If n is 0, the bits are inverted instead of rotated.
+   *
+   * @param {string} src BSB64 encoded string.
+   * @param {number} n Number of bits used for encoding (0-7).
+   * @returns {string} Decoded string.
    */
-  encodeString: function(str, n) {
-    var arr = BSB64.UTF8.toByteArray(str);
-    return BSB64.encode(arr, n);
-  },
-
-  /**
-   * BSB64 encoded string to Plain text
-   */
-  decodeString: function(str, n) {
-    var arr = BSB64.decode(str, n);
-    return BSB64.UTF8.fromByteArray(arr);
+  decodeToString: function(src, n) {
+    var arr = bsb64.decode(src, n);
+    return bsb64.utf8.fromByteArray(arr);
   },
 
   bit8: {
@@ -69,7 +82,7 @@ BSB64 = {
     }
   },
 
-  Base64: {
+  base64: {
     encode: function(arr) {
       var len = arr.length;
       if (len == 0) return '';
@@ -78,7 +91,6 @@ BSB64 = {
         tbl[i] = (i < 26 ? i + 65 : (i < 52 ? i + 71 : i - 4));
       }
       var str = '';
-      var buf = [];
       for (i = 0; i < len; i += 3) {
         str += String.fromCharCode(
           tbl[arr[i] >>> 2],
@@ -95,10 +107,8 @@ BSB64 = {
       if (str.length == 0) return arr;
       for (var i = 0; i < str.length; i++) {
         var c = str.charCodeAt(i);
-        if (!(((c >= 0x30) && (c <= 0x39)) ||
-              ((c >= 0x41) && (c <= 0x5A)) || ((c >= 0x61) && (c <= 0x7A)) ||
-               (c == 0x2B) || (c == 0x2F) || (c == 0x3D))) {
-          throw new Error('Invalid char: ' + c);
+        if (!(((c >= 0x30) && (c <= 0x39)) || ((c >= 0x41) && (c <= 0x5A)) || ((c >= 0x61) && (c <= 0x7A)) || (c == 0x2B) || (c == 0x2F) || (c == 0x3D))) {
+          throw new Error('invalid b64 char: 0x' + c.toString(16).toUpperCase() + ' at ' + i);
         }
       }
       var tbl = {61: 64, 47: 63, 43: 62};
@@ -126,7 +136,7 @@ BSB64 = {
     }
   },
 
-  UTF8: {
+  utf8: {
     toByteArray: function(s) {
       var a = [];
       if (!s) return a;
@@ -151,7 +161,7 @@ BSB64 = {
       if (!b) return null;
       var e = '';
       for (var i = 0; i < b.length; i++) {
-        e += '%' + BSB64.toHex(b[i]);
+        e += '%' + bsb64.toHex(b[i]);
       }
       return decodeURIComponent(e);
     }

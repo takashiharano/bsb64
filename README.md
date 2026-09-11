@@ -14,9 +14,9 @@ String decoded = BSB64.decodeToString("wsTG", 1);
 ```
 
 JavaScript:
-```JavaSctipt
-var encoded = BSB64.encodeString('abc', 1);
-var decoded = BSB64.decodeString('wsTG', 1);
+```JavaScript
+var encoded = bsb64.encode('abc', 1);
+var decoded = bsb64.decodeToString('wsTG', 1);
 ```
 
 Python:
