@@ -54,7 +54,7 @@ var bsb64 = {
   /**
    * Decodes a BSB64 string to a string.
    *
-   * The decoded byte array is interpreted as UTF-8.
+   * The decoded data is interpreted as UTF-8.
    * If n is 0, the bits are inverted instead of rotated.
    *
    * @param {string} src BSB64 encoded string.
