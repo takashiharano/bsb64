@@ -1,7 +1,7 @@
 BSB64
 =====================
 
-BSB64 is a reversible data transformation based on bit shifting and Base64 encoding.
+BSB64 is a simple reversible encoding method for obfuscation based on bit shifting and Base64 encoding.
 The resulting data resembles Base64-encoded text, but it cannot be decoded correctly using a standard Base64 decoder alone.
 Details of the algorithm are available at https://libutil.com/bsb64/.
 
@@ -21,8 +21,8 @@ var decoded = bsb64.decodeToString('wsTG', 1);
 
 Python:
 ```Python
-encoded = bsb64.encode_string('abc', 1)
-decoded = bsb64.decode_string('wsTG', 1)
+encoded = bsb64.encode('abc', 1)
+decoded = bsb64.decode_to_string('wsTG', 1)
 ```
 
 PowerShell:
