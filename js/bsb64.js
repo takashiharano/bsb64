@@ -158,7 +158,6 @@ var bsb64 = {
     },
 
     fromByteArray: function(b) {
-      if (!b) return null;
       var e = '';
       for (var i = 0; i < b.length; i++) {
         e += '%' + bsb64.toHex(b[i]);
