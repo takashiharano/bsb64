@@ -1,9 +1,16 @@
 BSB64
 =====================
 
-BSB64 is a simple reversible encoding method for obfuscation based on bit shifting and Base64 encoding.
+BSB64 (Bit Shifted Base64) is a simple reversible encoding method for obfuscation based on bit shifting and Base64 encoding.
+
 It is intended for lightweight obfuscation in environments where data would otherwise have to be stored or transmitted as plain text.
-The resulting data resembles Base64-encoded text, but it cannot be decoded correctly using a standard Base64 decoder alone.
+
+Before being Base64-encoded, each byte of the input data is circularly shifted to the left by the specified number of bits; if the shift count is 0, the bits are inverted instead.
+
+The resulting text resembles standard Base64-encoded data, but Base64 decoding alone does not restore the original data.
+
+The design keeps the data from being immediately readable while remaining simple enough to be decoded manually if necessary.
+
 Details of the algorithm are available at https://libutil.com/bsb64/.
 
 ## Usage
