@@ -1,7 +1,7 @@
 BSB64
 =====================
 
-BSB64 (Bit Shifted Base64) is a simple reversible encoding method for obfuscation based on bit shifting and Base64 encoding.
+BSB64 (Bit Shifted Base64) is a simple byte-wise cipher based on bit shifting, whose output is encoded in Base64.
 
 It is intended for lightweight obfuscation in environments where data would otherwise have to be stored or transmitted as plain text.
 
@@ -48,4 +48,6 @@ decoded = BSB64.DecodeString("wsTG", 1)
 ```
 
 ## Notice
-BSB64 is not intended to be used where secrecy is of any concern.
+BSB64 is intended for obfuscation, not for providing confidentiality.
+
+This method should not be used where confidentiality must be assured.
