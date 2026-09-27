@@ -1,9 +1,9 @@
 BSB64
 =====================
 
-BSB64 (Bit Shifted Base64) is a simple byte-wise cipher based on bit shifting, whose output is encoded in Base64.
+BSB64 (Bit Shifted Base64) is a simple byte-wise reversible transformation for lightweight data obfuscation, with its output encoded in Base64.
 
-It is intended for lightweight obfuscation in environments where data would otherwise have to be stored or transmitted as plain text.
+It is intended for environments where data would otherwise have to be stored or transmitted as plain text.
 
 Before being Base64-encoded, each byte of the input data is circularly shifted to the left by the specified number of bits; if the shift count is 0, the bits are inverted instead.
 
