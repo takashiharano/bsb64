@@ -1,4 +1,4 @@
-package com.libutil;
+package com.libutil.test;
 
 public class Log {
 

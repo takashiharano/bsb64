@@ -58,30 +58,10 @@ function Get-Bsb64EncodedString {
         $b = $Src
     }
 
-    $buf = Get-Bsb64EncodedBytes $b $N
+    $buf = Get-ShiftedBytes $b $N
     $encoded = [System.Convert]::ToBase64String($buf)
 
     return $encoded
-}
-
-function Get-Bsb64EncodedBytes {
-    Param (
-        [byte[]] $Src,
-        [int] $N
-    )
-
-    $buf = New-Object byte[] $Src.Length
-
-    for ($i=0; $i -lt $Src.Length; $i++) {
-        if ($N % 8 -eq 0) {
-            $b = Get-InvertedBitPattern $Src[$i]
-        } else {
-            $b = Get-LeftRotatedBitPattern $Src[$i] $N
-        }
-        $buf[$i] = $b
-    }
-
-    return $buf
 }
 
 #----------------------------------------------------------
@@ -94,16 +74,7 @@ function Get-Bsb64DecodedBytes {
     )
 
     $buf = [System.Convert]::FromBase64String($Src)
-    $arr = New-Object byte[] $buf.Length
-
-    for ($i = 0; $i -lt $buf.Length; $i++) {
-        if ($N % 8 -eq 0) {
-            $b = Get-InvertedBitPattern $buf[$i]
-        } else {
-            $b = Get-RightRotatedBitPattern $buf[$i] $N
-        }
-        $arr[$i] = $b
-    }
+    $arr = Get-UnshiftedBytes $buf $N
 
     return $arr
 }
@@ -119,7 +90,54 @@ function Get-Bsb64DecodedString {
 
     $buf = Get-Bsb64DecodedBytes $Src $N
     $str = [System.Text.Encoding]::UTF8.GetString($buf)
+
     return $str
+}
+
+#----------------------------------------------------------
+# Byte array to BSB64 transformed bytes
+#----------------------------------------------------------
+function Get-ShiftedBytes {
+    Param (
+        [byte[]]$Src,
+        [int]$N
+    )
+
+    $buf = New-Object byte[] $Src.Length
+
+    for ($i = 0; $i -lt $Src.Length; $i++) {
+        if ($N % 8 -eq 0) {
+            $b = Get-InvertedBitPattern $Src[$i]
+        } else {
+            $b = Get-LeftRotatedBitPattern $Src[$i] $N
+        }
+        $buf[$i] = $b
+    }
+
+    return $buf
+}
+
+#----------------------------------------------------------
+# BSB64 transformed bytes to original bytes
+#----------------------------------------------------------
+function Get-UnshiftedBytes {
+    Param (
+        [byte[]]$Src,
+        [int]$N
+    )
+
+    $buf = New-Object byte[] $Src.Length
+
+    for ($i = 0; $i -lt $Src.Length; $i++) {
+        if ($N % 8 -eq 0) {
+            $b = Get-InvertedBitPattern $Src[$i]
+        } else {
+            $b = Get-RightRotatedBitPattern $Src[$i] $N
+        }
+        $buf[$i] = $b
+    }
+
+    return $buf
 }
 
 function Get-LeftRotatedBitPattern {
@@ -131,6 +149,7 @@ function Get-LeftRotatedBitPattern {
     $N = $N % 8
     $i = [int]$V -band 255
     $b = [byte]((($i -shl $N) -bor ($i -shr (8 - $N))) -band 255)
+
     return $b
 }
 
@@ -141,8 +160,9 @@ function Get-RightRotatedBitPattern {
     )
 
     $N = $N % 8
-    $i = ([int]$V -band 255)
-    $b = [byte]((($i -shr $N) -bor ($i -shl ((8 - $N)))) -band 255)
+    $i = [int]$V -band 255
+    $b = [byte]((($i -shr $N) -bor ($i -shl (8 - $N))) -band 255)
+
     return $b
 }
 
@@ -152,5 +172,6 @@ function Get-InvertedBitPattern {
     )
 
     $b = [byte]((-bnot $V) -band 255)
+
     return $b
 }

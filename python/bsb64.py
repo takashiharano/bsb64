@@ -12,9 +12,27 @@ DEFAULT_ENCODING = 'utf-8'
 def encode(src, n, encoding=DEFAULT_ENCODING):
     if isinstance(src, str):
         src = src.encode(encoding)
+    b = shift_bits(src, n)
+    encoded = base64.b64encode(b)
+    s = encoded.decode('ascii')
+    return s
 
+#------------------------------------------------------------------------------
+def decode(src, n):
+    b64decoded = base64.b64decode(src)
+    b = unshift_bits(b64decoded, n)
+    return b
+
+def decode_to_string(src, n, encoding=DEFAULT_ENCODING):
+    b = decode(src, n)
+    s = b.decode(encoding)
+    return s
+
+#------------------------------------------------------------------------------
+def shift_bits(src, n):
     n = n % 8
     buf = []
+
     for i in range(len(src)):
         val = src[i]
         if n == 0:
@@ -23,19 +41,14 @@ def encode(src, n, encoding=DEFAULT_ENCODING):
             v = bit_rotate_left(val, n)
         buf.append(v)
 
-    b = bytearray(buf)
-    encoded = base64.b64encode(b)
-    s = encoded.decode('ascii')
-    return s
+    return bytes(buf)
 
-#------------------------------------------------------------------------------
-def decode(src, n):
-    b64decoded = base64.b64decode(src)
-
+def unshift_bits(src, n):
     n = n % 8
     buf = []
-    for i in range(len(b64decoded)):
-        val = b64decoded[i]
+
+    for i in range(len(src)):
+        val = src[i]
         if n == 0:
             v = ~val & 255
         else:
@@ -43,11 +56,6 @@ def decode(src, n):
         buf.append(v)
 
     return bytes(buf)
-
-def decode_to_string(src, n, encoding=DEFAULT_ENCODING):
-    b = decode(src, n)
-    s = b.decode(encoding)
-    return s
 
 #------------------------------------------------------------------------------
 def bit_rotate_left(v, n):

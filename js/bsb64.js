@@ -17,16 +17,8 @@ var bsb64 = {
    */
   encode: function(src, n) {
     if (typeof src == 'string') src = bsb64.utf8.toByteArray(src);
-    var fn = bsb64.bit8.rotateLeft;
-    if (n % 8 == 0) {
-      fn = bsb64.bit8.invert;
-    }
-    var buf = [];
-    for (var i = 0; i < src.length; i++) {
-      buf.push(fn(src[i], n));
-    }
-    var str = bsb64.base64.encode(buf);
-    return str;
+    var buf = bsb64.shiftBits(src, n);
+    return bsb64.base64.encode(buf);
   },
 
   /**
@@ -39,16 +31,8 @@ var bsb64 = {
    * @returns {number[]} Decoded byte array.
    */
   decode: function(src, n) {
-    var fn = bsb64.bit8.rotateRight;
-    if (n % 8 == 0) {
-      fn = bsb64.bit8.invert;
-    }
     var buf = bsb64.base64.decode(src);
-    var arr = [];
-    for (var i = 0; i < buf.length; i++) {
-      arr.push(fn(buf[i], n));
-    }
-    return arr;
+    return bsb64.unshiftBits(buf, n);
   },
 
   /**
@@ -64,6 +48,48 @@ var bsb64 = {
   decodeToString: function(src, n) {
     var arr = bsb64.decode(src, n);
     return bsb64.utf8.fromByteArray(arr);
+  },
+
+  /**
+   * Applies the BSB64 bit transformation to a byte array.
+   *
+   * If n is 0, the bits are inverted instead of rotated.
+   *
+   * @param {number[]} src Source byte array.
+   * @param {number} n Number of bits to rotate (0-7).
+   * @returns {number[]} Transformed byte array.
+   */
+  shiftBits: function(src, n) {
+    var fn = bsb64.bit8.rotateLeft;
+    if (n % 8 == 0) {
+      fn = bsb64.bit8.invert;
+    }
+    var buf = [];
+    for (var i = 0; i < src.length; i++) {
+      buf.push(fn(src[i], n));
+    }
+    return buf;
+  },
+
+  /**
+   * Reverses the BSB64 bit transformation on a byte array.
+   *
+   * If n is 0, the bits are inverted instead of rotated.
+   *
+   * @param {number[]} src Source byte array.
+   * @param {number} n Number of bits to rotate (0-7).
+   * @returns {number[]} Restored byte array.
+   */
+  unshiftBits: function(src, n) {
+    var fn = bsb64.bit8.rotateRight;
+    if (n % 8 == 0) {
+      fn = bsb64.bit8.invert;
+    }
+    var buf = [];
+    for (var i = 0; i < src.length; i++) {
+      buf.push(fn(src[i], n));
+    }
+    return buf;
   },
 
   bit8: {

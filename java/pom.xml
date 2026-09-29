@@ -3,7 +3,7 @@
 
   <groupId>com.libutil</groupId>
   <artifactId>bsb64</artifactId>
-  <version>1.0.0</version>
+  <version>1.1.0</version>
   <packaging>jar</packaging>
 
   <name>BSB64</name>
@@ -13,7 +13,7 @@
   <licenses>
     <license>
       <name>MIT License</name>
-      <url>https://opensource.org/license/mit</url>
+      <url>https://opensource.org/license/MIT</url>
     </license>
   </licenses>
 
@@ -41,7 +41,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.15.0</version>
+        <version>3.16.0</version>
       </plugin>
 
       <plugin>
@@ -89,14 +89,14 @@
         <extensions>true</extensions>
         <configuration>
           <publishingServerId>central</publishingServerId>
-          <autoPublish>true</autoPublish>
+          <autoPublish>false</autoPublish>
         </configuration>
       </plugin>
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-gpg-plugin</artifactId>
-        <version>3.2.7</version>
+        <version>3.2.8</version>
         <executions>
           <execution>
             <id>sign-artifacts</id>

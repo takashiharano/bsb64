@@ -48,7 +48,7 @@ public class BSB64 {
    * @return the BSB64 encoded string
    */
   public static String encode(byte[] src, int n) {
-    byte[] buf = transform(src, n);
+    byte[] buf = shiftBits(src, n);
     String encoded = Base64.getEncoder().encodeToString(buf);
     return encoded;
   }
@@ -101,7 +101,7 @@ public class BSB64 {
    */
   public static byte[] decode(String src, int n) {
     byte[] buf = Base64.getDecoder().decode(src);
-    return reverseTransform(buf, n);
+    return unshiftBits(buf, n);
   }
 
   /**
@@ -156,7 +156,7 @@ public class BSB64 {
    *          the shift value from 0 to 7
    * @return a newly allocated byte array containing the transformed bytes
    */
-  public static byte[] transform(byte[] src, int n) {
+  public static byte[] shiftBits(byte[] src, int n) {
     n = n % 8;
     byte[] buf = new byte[src.length];
     for (int i = 0; i < src.length; i++) {
@@ -186,7 +186,7 @@ public class BSB64 {
    *          the shift value from 0 to 7
    * @return a newly allocated byte array containing the reverse-transformed bytes
    */
-  public static byte[] reverseTransform(byte[] src, int n) {
+  public static byte[] unshiftBits(byte[] src, int n) {
     n = n % 8;
     byte[] buf = new byte[src.length];
 

@@ -3,84 +3,136 @@
 ' Released under the MIT License
 ' https://libutil.com/bsb64/
 
-''
+'------------------------------------------------------------------------------
+' EncodeString
 ' Plain text to BSB64 encoded string
-'
+'------------------------------------------------------------------------------
 Public Function EncodeString(str As String, n As Integer) As String
     Dim arr() As Byte
     Dim ret As String
+
     arr = StringToUtf8Bytes(str)
     ret = Encode(arr, n)
+
     EncodeString = ret
 End Function
 
+'------------------------------------------------------------------------------
+' Encode
+' Byte array to BSB64 encoded string
+'------------------------------------------------------------------------------
 Public Function Encode(arr() As Byte, n As Integer) As String
-    Dim i As Integer
-    Dim arrLen As Integer
     Dim buf() As Byte
-    arrLen = UBound(arr)
-    ReDim buf(arrLen)
-    For i = 0 To arrLen
-        If n Mod 8 = 0 Then
-            buf(i) = InvertBit(arr(i))
-        Else
-            buf(i) = RotateBitLeft(arr(i), n)
-        End If
-    Next
+    buf = ShiftBits(arr, n)
     Encode = EncodeBase64(buf)
 End Function
 
-''
-' BSB64 encoded string to Plain text
-'
+'------------------------------------------------------------------------------
+' DecodeString
+' BSB64 encoded string to plain text
+'------------------------------------------------------------------------------
 Public Function DecodeString(str As String, n As Integer) As String
     Dim arr() As Byte
     Dim ret As String
+
     arr = Decode(str, n)
     ret = Utf8BytesToString(arr)
+
     DecodeString = ret
 End Function
 
+'------------------------------------------------------------------------------
+' Decode
+' BSB64 encoded string to byte array
+'------------------------------------------------------------------------------
 Public Function Decode(src As String, n As Integer) As Byte()
-    Dim i As Integer
-    Dim bufLen As Integer
     Dim buf() As Byte
     Dim arr() As Byte
+
     buf = DecodeBase64(src)
-    bufLen = UBound(buf)
-    ReDim arr(bufLen)
-    For i = 0 To bufLen
-        If n Mod 8 = 0 Then
-            arr(i) = InvertBit(buf(i))
-        Else
-            arr(i) = RotateBitRight(buf(i), n)
-        End If
-    Next
+    arr = UnshiftBits(buf, n)
+
     Decode = arr
 End Function
 
-''
+'------------------------------------------------------------------------------
+' ShiftBits
+' Apply the BSB64 bit transformation to a byte array
+'------------------------------------------------------------------------------
+Public Function ShiftBits(ByRef src() As Byte, n As Integer) As Byte()
+    Dim i As Integer
+    Dim srcLen As Integer
+    Dim buf() As Byte
+
+    srcLen = UBound(src)
+    ReDim buf(srcLen)
+
+    For i = 0 To srcLen
+        If n Mod 8 = 0 Then
+            buf(i) = InvertBit(src(i))
+        Else
+            buf(i) = RotateBitLeft(src(i), n)
+        End If
+    Next
+
+    ShiftBits = buf
+End Function
+
+'------------------------------------------------------------------------------
+' UnshiftBits
+' Reverse the BSB64 bit transformation on a byte array
+'------------------------------------------------------------------------------
+Public Function UnshiftBits(ByRef src() As Byte, n As Integer) As Byte()
+    Dim i As Integer
+    Dim srcLen As Integer
+    Dim buf() As Byte
+
+    srcLen = UBound(src)
+    ReDim buf(srcLen)
+
+    For i = 0 To srcLen
+        If n Mod 8 = 0 Then
+            buf(i) = InvertBit(src(i))
+        Else
+            buf(i) = RotateBitRight(src(i), n)
+        End If
+    Next
+
+    UnshiftBits = buf
+End Function
+
+'------------------------------------------------------------------------------
+' EncodeBase64String
 ' Plain text to Base64 encoded string
-'
+'------------------------------------------------------------------------------
 Public Function EncodeBase64String(str As String) As String
     Dim arr() As Byte
     Dim ret As String
+
     arr = StringToUtf8Bytes(str)
     ret = EncodeBase64(arr)
+
     EncodeBase64String = ret
 End Function
 
-''
-' Base64 encoded string to Plain text
-'
+'------------------------------------------------------------------------------
+' DecodeBase64String
+' Base64 encoded string to plain text
+'------------------------------------------------------------------------------
 Public Function DecodeBase64String(str As String) As String
     Dim arr() As Byte
     Dim ret As String
+
     arr = DecodeBase64(str)
     ret = Utf8BytesToString(arr)
+
     DecodeBase64String = ret
 End Function
 
+'------------------------------------------------------------------------------
+' EncodeBase64
+' Byte array to Base64 encoded string
+'------------------------------------------------------------------------------
 Public Function EncodeBase64(ByRef arr() As Byte) As String
     Dim arrLen As Integer
     Dim str As String
@@ -95,6 +147,7 @@ Public Function EncodeBase64(ByRef arr() As Byte) As String
     tbl(64) = 61
     tbl(63) = 47
     tbl(62) = 43
+
     For i = 0 To 61
         If i < 26 Then
             tbl(i) = i + 65
@@ -102,22 +155,27 @@ Public Function EncodeBase64(ByRef arr() As Byte) As String
             tbl(i) = i + 71
         Else
             tbl(i) = i - 4
-       End If
+        End If
     Next i
 
     str = ""
     arrLen = UBound(arr)
+
     For i = 0 To arrLen Step 3
         b0 = 0
         b1 = 0
         b2 = 0
+
         If i > arrLen Then
-          Exit For
+            Exit For
         End If
+
         b0 = arr(i) And 255
+
         If ((i + 1) <= arrLen) Then
             b1 = arr(i + 1) And 255
         End If
+
         If ((i + 2) <= arrLen) Then
             b2 = arr(i + 2) And 255
         End If
@@ -133,7 +191,7 @@ Public Function EncodeBase64(ByRef arr() As Byte) As String
         codePoints(2) = tbl(idx)
 
         If ((i + 2) <= arrLen) Then
-            idx = (b2 And 63)
+            idx = b2 And 63
         Else
             idx = 64
         End If
@@ -145,6 +203,10 @@ Public Function EncodeBase64(ByRef arr() As Byte) As String
     EncodeBase64 = str
 End Function
 
+'------------------------------------------------------------------------------
+' DecodeBase64
+' Base64 encoded string to byte array
+'------------------------------------------------------------------------------
 Public Function DecodeBase64(ByRef str As String) As Byte()
     Dim arr() As Byte
     Dim i As Integer
@@ -160,6 +222,7 @@ Public Function DecodeBase64(ByRef str As String) As Byte()
 
     For i = 1 To Len(str)
         c = Asc(Mid(str, i, 1))
+
         If Not (((c >= 48) And (c <= 57)) Or ((c >= 65) And (c <= 90)) Or ((c >= 97) And (c <= 122)) Or (c = 43) Or (c = 47) Or (c = 61)) Then
             MsgBox "Invalid char: " & c & " at " & i
         End If
@@ -168,6 +231,7 @@ Public Function DecodeBase64(ByRef str As String) As Byte()
     tbl(61) = 64
     tbl(47) = 63
     tbl(43) = 62
+
     For i = 0 To 61
         If i < 26 Then
             idx = i + 65
@@ -184,8 +248,10 @@ Public Function DecodeBase64(ByRef str As String) As Byte()
             If (i + j) > Len(str) Then
                 Exit For
             End If
+
             buf(j) = tbl(Asc(Mid(str, i + j, 1)))
         Next
+
         Call ArrayPush(arr, ((buf(0) * 2 ^ 2) Or (buf(1) And 63) \ 2 ^ 4))
         Call ArrayPush(arr, (((buf(1) And 15) * 2 ^ 4) Or (buf(2) And 63) \ 2 ^ 2))
         Call ArrayPush(arr, (((buf(2) And 3) * 2 ^ 6) Or (buf(3) And 63)))
@@ -193,6 +259,7 @@ Public Function DecodeBase64(ByRef str As String) As Byte()
 
     If buf(3) = 64 Then
         Call ArrayPop(arr)
+
         If buf(2) = 64 Then
             Call ArrayPop(arr)
         End If
@@ -207,8 +274,10 @@ End Function
 
 Private Function RotateBitLeft(v As Byte, n As Integer) As Byte
     n = n Mod 8
+
     Dim ret As Byte
     ret = ShiftBitLeft(v, n) Or ShiftBitRight(v, (8 - n))
+
     RotateBitLeft = ret
 End Function
 
@@ -221,49 +290,62 @@ End Function
 
 Private Function ShiftBitLeft(v As Byte, n As Integer) As Byte
     Dim ret As Byte
+
     If n = 0 Then
         ret = v
     Else
         Dim k As Byte
-        k = CLng(2 ^ (8 - n - 1))
         Dim d As Byte
-        d = v And (k - 1)
         Dim c As Byte
+
+        k = CLng(2 ^ (8 - n - 1))
+        d = v And (k - 1)
         c = d * CLng(2 ^ n)
+
         If v And k Then
             c = c Or &H80
         End If
+
         ret = c
     End If
+
     ShiftBitLeft = ret
 End Function
 
 Private Function ShiftBitRight(v As Byte, n As Integer) As Byte
     Dim ret As Byte
+
     If n = 0 Then
         ret = v
     Else
         Dim y As Byte
-        y = v And &H7F
         Dim z As Byte
+
+        y = v And &H7F
+
         If n = 8 - 1 Then
             z = 0
         Else
             z = y \ CLng(2 ^ n)
         End If
+
         If y <> v Then
             z = z Or CLng(2 ^ (8 - n - 1))
         End If
+
         ret = z
     End If
+
     ShiftBitRight = ret
 End Function
 
 Private Function ArrayPush(ByRef arr As Variant, val As Variant)
     On Error GoTo ArrInit
+
     ReDim Preserve arr(UBound(arr) + 1)
     arr(UBound(arr)) = val
     Exit Function
+
 ArrInit:
     ReDim arr(0)
     arr(0) = val
@@ -275,6 +357,7 @@ End Function
 
 Private Function StringToUtf8Bytes(ByRef sData As String) As Byte()
     Dim arr() As Byte
+
     With CreateObject("ADODB.Stream")
         .Mode = 3 'adModeReadWrite
         .Open
@@ -287,11 +370,13 @@ Private Function StringToUtf8Bytes(ByRef sData As String) As Byte()
         arr = .Read
         .Close
     End With
+
     StringToUtf8Bytes = arr
 End Function
 
 Private Function Utf8BytesToString(ByRef arr() As Byte) As String
     Dim str As String
+
     With CreateObject("ADODB.Stream")
         .Mode = 3 'adModeReadWrite
         .Open
@@ -303,5 +388,6 @@ Private Function Utf8BytesToString(ByRef arr() As Byte) As String
         str = .ReadText
         .Close
     End With
+
     Utf8BytesToString = str
 End Function
