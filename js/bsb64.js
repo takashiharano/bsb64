@@ -64,9 +64,9 @@ var bsb64 = {
     if (n % 8 == 0) {
       fn = bsb64.bit8.invert;
     }
-    var buf = [];
+    var buf = new Array(src.length);
     for (var i = 0; i < src.length; i++) {
-      buf.push(fn(src[i], n));
+      buf[i] = fn(src[i], n);
     }
     return buf;
   },
@@ -85,9 +85,9 @@ var bsb64 = {
     if (n % 8 == 0) {
       fn = bsb64.bit8.invert;
     }
-    var buf = [];
+    var buf = new Array(src.length);
     for (var i = 0; i < src.length; i++) {
-      buf.push(fn(src[i], n));
+      buf[i] = fn(src[i], n);
     }
     return buf;
   },
